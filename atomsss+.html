@@ -1,340 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
 <!doctype html>
 <html lang="ar">
 <head>
-  <meta charset="utf-8" />
-  <title>لعبة الذرة — Atom Builder</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin: 0; padding: 0; display:flex; flex-direction:column; align-items:center; background:#f3f6fb; color:#111;}
-    header { width:100%; padding:16px; text-align:center; background:linear-gradient(90deg,#224 0%, #446 100%); color:white;}
-    main { max-width:1000px; width:100%; display:flex; gap:20px; padding:20px; box-sizing:border-box; }
-    .left { flex:1; min-width:320px; }
-    .right { width:360px; background:white; border-radius:10px; padding:16px; box-shadow:0 6px 18px rgba(10,20,40,0.08); }
-    canvas { width:100%; height:480px; background:linear-gradient(#fff,#eef4ff); border-radius:12px; display:block; }
-    .controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
-    .ctrl { display:flex; gap:6px; align-items:center; }
-    button { padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; background:white; cursor:pointer; }
-    .big { font-size:18px; padding:10px 14px; }
-    .panel-item { margin-bottom:10px; }
-    .stat { font-weight:700; font-size:18px; }
-    .feedback { margin-top:10px; padding:10px; border-radius:8px; background:#fff7e6; border:1px solid #ffecb5; }
-    footer { font-size:13px; color:#555; margin:12px; }
-    .btn-danger { background:#ffeceb; border-color:#ffb8b8; }
-    .btn-success { background:#e6ffef; border-color:#b8ffda; }
-    .small { font-size:13px; color:#444; }
-    .legend { display:flex; gap:10px; margin-top:8px; }
-    .legend span { display:inline-flex; gap:6px; align-items:center; }
-    .dot { width:14px; height:14px; border-radius:50%; display:inline-block; }
-  </style>
+<meta charset="utf-8" />
+<title>لعبة الذرة — Atom Builder</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; background:#f3f6fb; color:#111;}
+header { width:100%; padding:16px; text-align:center; background:linear-gradient(90deg,#224 0%, #446 100%); color:white;}
+main { max-width:1000px; width:100%; display:flex; gap:20px; padding:20px; box-sizing:border-box;}
+.left { flex:1; min-width:320px; }
+.right { width:360px; background:white; border-radius:10px; padding:16px; box-shadow:0 6px 18px rgba(10,20,40,0.08);}
+canvas { width:100%; height:480px; background:linear-gradient(#fff,#eef4ff); border-radius:12px; display:block;}
+.controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;}
+.ctrl { display:flex; gap:6px; align-items:center;}
+button { padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; background:white; cursor:pointer;}
+.panel-item { margin-bottom:10px; }
+.stat { font-weight:700; font-size:18px; }
+.feedback { margin-top:10px; padding:10px; border-radius:8px; background:#fff7e6; border:1px solid #ffecb5; white-space: pre-line;}
+.btn-danger { background:#ffeceb; border-color:#ffb8b8; }
+.btn-success { background:#e6ffef; border-color:#b8ffda; }
+.small { font-size:13px; color:#444; }
+.legend { display:flex; gap:10px; margin-top:8px; }
+.legend span { display:inline-flex; gap:6px; align-items:center; }
+.dot { width:14px; height:14px; border-radius:50%; display:inline-block; }
+</style>
 </head>
 <body>
 <header>
-  <h1>لعبة الذرة — Atom Builder</h1>
-  <div class="small">أضف/أزل بروتونات، نيوترونات، وإلكترونات وشاهد ماذا يحدث — تعلّم العناصر والنظائر!</div>
+<h1>لعبة الذرة — Atom Builder</h1>
+<div class="small">أضف/أزل بروتونات، نيوترونات، وإلكترونات وشاهد ماذا يحدث — تعلّم العناصر والنظائر!</div>
 </header>
 
 <main>
-  <div class="left">
-    <canvas id="canvas"></canvas>
+<div class="left">
+<canvas id="canvas"></canvas>
 
-    <div class="controls">
-      <div class="ctrl">
-        <button id="addP">+P</button>
-        <button id="remP">−P</button>
-        <div class="small">بروتونات (<span id="pCount">1</span>)</div>
-      </div>
-
-      <div class="ctrl">
-        <button id="addN">+N</button>
-        <button id="remN">−N</button>
-        <div class="small">نيوترونات (<span id="nCount">0</span>)</div>
-      </div>
-
-      <div class="ctrl">
-        <button id="addE">+e⁻</button>
-        <button id="remE">−e⁻</button>
-        <div class="small">إلكترونات (<span id="eCount">1</span>)</div>
-      </div>
-
-      <div class="ctrl">
-        <button id="reset" class="btn-danger">إعادة ضبط</button>
-        <button id="check" class="btn-success">تحقق</button>
-      </div>
-    </div>
-
+<div class="controls">
+  <div class="ctrl">
+    <button id="addP">+P</button>
+    <button id="remP">−P</button>
+    <div class="small">بروتونات (<span id="pCount">1</span>)</div>
   </div>
+  <div class="ctrl">
+    <button id="addN">+N</button>
+    <button id="remN">−N</button>
+    <div class="small">نيوترونات (<span id="nCount">0</span>)</div>
+  </div>
+  <div class="ctrl">
+    <button id="addE">+e⁻</button>
+    <button id="remE">−e⁻</button>
+    <div class="small">إلكترونات (<span id="eCount">1</span>)</div>
+  </div>
+  <div class="ctrl">
+    <button id="reset" class="btn-danger">إعادة ضبط</button>
+    <button id="check" class="btn-success">تحقق</button>
+  </div>
+</div>
+</div>
 
-  <aside class="right">
-    <div class="panel-item">
-      <div>العنصر: <span id="elementName" class="stat">Hydrogen (H)</span></div>
-      <div class="small">العدد الذري (Z) = عدد البروتونات</div>
-    </div>
+<aside class="right">
+<div class="panel-item">
+<div>العنصر: <span id="elementName" class="stat">Hydrogen (H)</span></div>
+<div class="small">العدد الذري (Z) = عدد البروتونات</div>
+</div>
 
-    <div class="panel-item">
-      <div>الكتلة (تقريبية) A = Z + N : <span id="massNumber" class="stat">1</span></div>
-      <div class="small">النظير: <span id="isotope" class="stat">¹H</span></div>
-    </div>
+<div class="panel-item">
+<div>الكتلة (تقريبية) A = Z + N : <span id="massNumber" class="stat">1</span></div>
+<div class="small">النظير: <span id="isotope" class="stat">¹H</span></div>
+</div>
 
-    <div class="panel-item">
-      <div class="small">الحالة الشحنية: <span id="charge" class="stat">+0</span></div>
-      <div class="small">التعادل (electrically neutral) إذا كان e⁻ = P</div>
-    </div>
+<div class="panel-item">
+<div class="small">الحالة الشحنية: <span id="charge" class="stat">+0</span></div>
+<div class="small">التعادل إذا كان e⁻ = P</div>
+</div>
 
-    <div class="panel-item">
-      <div class="small">تقييم الاستقرار (مبسط):</div>
-      <div id="stability" class="feedback">غير مفحوص بعد — اضغط "تحقق"</div>
-    </div>
+<div class="panel-item">
+<div class="small">تقييم الاستقرار (مبسط):</div>
+<div id="stability" class="feedback">غير مفحوص بعد — اضغط "تحقق"</div>
+</div>
 
-    <div class="panel-item legend">
-      <span><span class="dot" style="background:#ff6b6b"></span>بروتون</span>
-      <span><span class="dot" style="background:#a0aec0"></span>نيوترون</span>
-      <span><span class="dot" style="background:#55aaff"></span>إلكترون</span>
-    </div>
+<div class="panel-item legend">
+<span><span class="dot" style="background:#ff6b6b"></span>بروتون</span>
+<span><span class="dot" style="background:#a0aec0"></span>نيوترون</span>
+<span><span class="dot" style="background:#55aaff"></span>إلكترون</span>
+</div>
 
-    <hr/>
-
-    <div class="small">
-      تعليمات: أضف بروتون لتغيّر العنصر، أضف/ازل نيوترونات لتجربة نظائر، وأضف إلكترونات لتغيّر حالة الشحنة. هذه لعبة تعليمية مبسطة.
-    </div>
-  </aside>
+<hr/>
+<div class="small">
+تعليمات: أضف بروتون لتغيّر العنصر، أضف/ازل نيوترونات لتجربة نظائر، وأضف إلكترونات لتغيّر حالة الشحنة.
+</div>
+</aside>
 </main>
 
 <footer>
-  مصادر للمطالعة: Atomic number — Wikipedia; Isotope — Wikipedia; Periodic table — Royal Society of Chemistry.
+مصادر: Atomic number — Wikipedia; Isotope — Wikipedia; Periodic table — Royal Society of Chemistry.
 </footer>
 
 <script>
-  /* --- عناصر الممثلة فقط (المجموعة 1-2 و 13-18) --- */
-  const elements = [
-    {Z:1, name:'Hydrogen', symbol:'H'},
-    {Z:2, name:'Helium', symbol:'He'},
-    {Z:3, name:'Lithium', symbol:'Li'},
-    {Z:4, name:'Beryllium', symbol:'Be'},
-    {Z:5, name:'Boron', symbol:'B'},
-    {Z:6, name:'Carbon', symbol:'C'},
-    {Z:7, name:'Nitrogen', symbol:'N'},
-    {Z:8, name:'Oxygen', symbol:'O'},
-    {Z:9, name:'Fluorine', symbol:'F'},
-    {Z:10, name:'Neon', symbol:'Ne'},
-    {Z:11, name:'Sodium', symbol:'Na'},
-    {Z:12, name:'Magnesium', symbol:'Mg'},
-    {Z:13, name:'Aluminium', symbol:'Al'},
-    {Z:14, name:'Silicon', symbol:'Si'},
-    {Z:15, name:'Phosphorus', symbol:'P'},
-    {Z:16, name:'Sulfur', symbol:'S'},
-    {Z:17, name:'Chlorine', symbol:'Cl'},
-    {Z:18, name:'Argon', symbol:'Ar'},
-    {Z:19, name:'Potassium', symbol:'K'},
-    {Z:20, name:'Calcium', symbol:'Ca'},
-    {Z:31, name:'Gallium', symbol:'Ga'},
-    {Z:32, name:'Germanium', symbol:'Ge'},
-    {Z:33, name:'Arsenic', symbol:'As'},
-    {Z:34, name:'Selenium', symbol:'Se'},
-    {Z:35, name:'Bromine', symbol:'Br'},
-    {Z:36, name:'Krypton', symbol:'Kr'},
-    {Z:49, name:'Indium', symbol:'In'},
-    {Z:50, name:'Tin', symbol:'Sn'},
-    {Z:51, name:'Antimony', symbol:'Sb'},
-    {Z:52, name:'Tellurium', symbol:'Te'},
-    {Z:53, name:'Iodine', symbol:'I'},
-    {Z:54, name:'Xenon', symbol:'Xe'}
-  ];
+/* --- قائمة العناصر 49 --- */
+const elements = [
+{Z:1,name:'Hydrogen',symbol:'H'},{Z:2,name:'Helium',symbol:'He'},{Z:3,name:'Lithium',symbol:'Li'},
+{Z:4,name:'Beryllium',symbol:'Be'},{Z:5,name:'Boron',symbol:'B'},{Z:6,name:'Carbon',symbol:'C'},
+{Z:7,name:'Nitrogen',symbol:'N'},{Z:8,name:'Oxygen',symbol:'O'},{Z:9,name:'Fluorine',symbol:'F'},
+{Z:10,name:'Neon',symbol:'Ne'},{Z:11,name:'Sodium',symbol:'Na'},{Z:12,name:'Magnesium',symbol:'Mg'},
+{Z:13,name:'Aluminium',symbol:'Al'},{Z:14,name:'Silicon',symbol:'Si'},{Z:15,name:'Phosphorus',symbol:'P'},
+{Z:16,name:'Sulfur',symbol:'S'},{Z:17,name:'Chlorine',symbol:'Cl'},{Z:18,name:'Argon',symbol:'Ar'},
+{Z:19,name:'Potassium',symbol:'K'},{Z:20,name:'Calcium',symbol:'Ca'},
+{Z:31,name:'Gallium',symbol:'Ga'},{Z:32,name:'Germanium',symbol:'Ge'},{Z:33,name:'Arsenic',symbol:'As'},
+{Z:34,name:'Selenium',symbol:'Se'},{Z:35,name:'Bromine',symbol:'Br'},{Z:36,name:'Krypton',symbol:'Kr'},
+{Z:49,name:'Indium',symbol:'In'},{Z:50,name:'Tin',symbol:'Sn'},{Z:51,name:'Antimony',symbol:'Sb'},
+{Z:52,name:'Tellurium',symbol:'Te'},{Z:53,name:'Iodine',symbol:'I'},{Z:54,name:'Xenon',symbol:'Xe'}
+];
 
-  /* عناصر DOM */
-  const pCountEl = document.getElementById('pCount');
-  const nCountEl = document.getElementById('nCount');
-  const eCountEl = document.getElementById('eCount');
-  const elementNameEl = document.getElementById('elementName');
-  const massNumberEl = document.getElementById('massNumber');
-  const isotopeEl = document.getElementById('isotope');
-  const chargeEl = document.getElementById('charge');
-  const stabilityEl = document.getElementById('stability');
+/* عناصر DOM */
+const pCountEl=document.getElementById('pCount');
+const nCountEl=document.getElementById('nCount');
+const eCountEl=document.getElementById('eCount');
+const elementNameEl=document.getElementById('elementName');
+const massNumberEl=document.getElementById('massNumber');
+const isotopeEl=document.getElementById('isotope');
+const chargeEl=document.getElementById('charge');
+const stabilityEl=document.getElementById('stability');
 
-  let P = 1, N = 0, E = 1;
-  let currentIndex = 0; // لتغيير العنصر ضمن قائمة الممثلة فقط
+let P=1,N=0,E=1,currentIndex=0;
 
-  /* تحديث الواجهة النصية */
-  function updateStats(){
-    const elem = elements[currentIndex];
-    P = elem.Z;
-    pCountEl.textContent = P;
-    nCountEl.textContent = N;
-    eCountEl.textContent = E;
+function updateStats(){
+  const elem=elements[currentIndex];
+  P=elem.Z;
+  pCountEl.textContent=P;
+  nCountEl.textContent=N;
+  eCountEl.textContent=E;
+  const A=P+N;
+  massNumberEl.textContent=A;
+  isotopeEl.textContent=`${A}${elem.symbol}`;
+  elementNameEl.textContent=`${elem.name} (${elem.symbol})`;
+  const netCharge=E-P;
+  chargeEl.textContent=netCharge===0?'+0':(netCharge>0?`−${netCharge}`:`+${-netCharge}`);
+}
 
-    const A = P + N;
-    massNumberEl.textContent = A;
-    isotopeEl.textContent = `${A}(${elem.symbol})`;
-    elementNameEl.textContent = `${elem.name} (${elem.symbol})`;
-    const netCharge = E - P;
-    chargeEl.textContent = (netCharge===0) ? '+0' : (netCharge>0 ? `−${netCharge} (anion)` : `+${-netCharge} (cation)`);
+/* ---------- رسم الذرة ---------- */
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+function fitCanvas(){canvas.width=canvas.clientWidth; canvas.height=canvas.clientHeight;}
+window.addEventListener('resize',fitCanvas);
+window.addEventListener('load',fitCanvas);
+fitCanvas();
+let t0=performance.now();
+
+function draw(){
+  const w=canvas.width,h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  const cx=w/2,cy=h/2;
+  ctx.save();ctx.translate(cx,cy);
+
+  // النواة
+  const totalNuc=Math.max(1,P+N);
+  const nucRadius=70;
+  const angles=[];
+  for(let i=0;i<totalNuc;i++) angles.push((i/totalNuc)*Math.PI*2);
+  let i=0,pLeft=P,nLeft=N;
+  while(i<totalNuc){
+    const angle=angles[i];
+    const r=nucRadius*(0.35+0.55*((i%5)/5));
+    const x=Math.cos(angle)*r*0.6;
+    const y=Math.sin(angle)*r*0.6;
+    if(pLeft>0){ctx.beginPath();ctx.fillStyle='#ff6b6b';ctx.arc(x,y,10,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fff';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('p',x,y);pLeft--;}
+    else{ctx.beginPath();ctx.fillStyle='#a0aec0';ctx.arc(x,y,10,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fff';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('n',x,y);nLeft--;}
+    i++;
   }
+  ctx.restore();
 
-  /* ---------- رسم الذرة (Canvas) ---------- */
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-
-  function fitCanvas(){
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+  // الإلكترونات
+  const now=performance.now();
+  const elapsed=(now-t0)/1000;
+  let remaining=E;
+  const shells=[110,160,210,260];
+  let shellIndex=0;
+  ctx.save();ctx.translate(cx,cy);
+  while(remaining>0 && shellIndex<shells.length){
+    const r=shells[shellIndex];
+    ctx.beginPath();ctx.setLineDash([6,6]);ctx.strokeStyle='rgba(80,120,200,0.25)';ctx.lineWidth=1.2;
+    ctx.arc(0,0,r,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    const capacities=[2,8,8,18];
+    const cap=capacities[shellIndex];
+    const onThis=Math.min(cap,remaining);
+    for(let k=0;k<onThis;k++){
+      const angle=((k/onThis)*Math.PI*2)+elapsed*(0.6+shellIndex*0.2)*((shellIndex%2===0)?1:-1);
+      const ex=Math.cos(angle)*r;const ey=Math.sin(angle)*r;
+      ctx.beginPath();ctx.fillStyle='#55aaff';ctx.arc(ex,ey,8,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fff';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('e',ex,ey);
+    }
+    remaining-=onThis;shellIndex++;
   }
-  window.addEventListener('resize', fitCanvas);
-  window.addEventListener('load', fitCanvas);
-  fitCanvas();
-
-  let t0 = performance.now();
-
-  function draw(){
-    const w = canvas.width;
-    const h = canvas.height;
-    ctx.clearRect(0,0,w,h);
-
-    const cx = w/2;
-    const cy = h/2;
-
-    ctx.save();
-    ctx.translate(cx, cy);
-
-    // nucleus
-    ctx.beginPath();
-    ctx.fillStyle = 'rgba(240,240,255,0.9)';
-    ctx.arc(0,0,70,0,Math.PI*2);
-    ctx.fill();
-
-    const totalNuc = Math.max(1, P+N);
-    const nucRadius = 70;
-    const angles = [];
-    for (let i=0;i<totalNuc;i++){
-      angles.push((i/totalNuc) * Math.PI*2);
-    }
-    let i = 0, pLeft = P, nLeft = N;
-    while(i < totalNuc){
-      const angle = angles[i];
-      const r = nucRadius * (0.35 + 0.55 * ( (i%5)/5 ));
-      const x = Math.cos(angle) * r * 0.6;
-      const y = Math.sin(angle) * r * 0.6;
-      if (pLeft>0){
-        ctx.beginPath();
-        ctx.fillStyle = '#ff6b6b';
-        ctx.arc(x,y,10,0,Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle = '#fff';
-        ctx.font = '10px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('p', x, y);
-        pLeft--;
-      } else {
-        ctx.beginPath();
-        ctx.fillStyle = '#a0aec0';
-        ctx.arc(x,y,10,0,Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle = '#fff';
-        ctx.font = '10px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('n', x, y);
-        nLeft--;
-      }
-      i++;
-    }
-
-    ctx.restore();
-
-    // electrons
-    const now = performance.now();
-    const elapsed = (now - t0) / 1000;
-    const electronCount = Math.max(0, E);
-    const shells = [110, 160, 210, 260];
-    let remaining = electronCount;
-    let shellIndex = 0;
-    ctx.save();
-    ctx.translate(cx, cy);
-    while(remaining>0 && shellIndex < shells.length){
-      const r = shells[shellIndex];
-      ctx.beginPath();
-      ctx.setLineDash([6,6]);
-      ctx.strokeStyle = 'rgba(80,120,200,0.25)';
-      ctx.lineWidth = 1.2;
-      ctx.arc(0,0,r,0,Math.PI*2);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      const capacities = [2,8,8,18];
-      const cap = capacities[shellIndex];
-      const onThis = Math.min(cap, remaining);
-      for(let k=0;k<onThis;k++){
-        const angle = ((k / onThis) * Math.PI*2) + elapsed * (0.6 + shellIndex*0.2) * ((shellIndex%2===0)?1:-1);
-        const ex = Math.cos(angle) * r;
-        const ey = Math.sin(angle) * r;
-        ctx.beginPath();
-        ctx.fillStyle = '#55aaff';
-        ctx.arc(ex, ey, 8, 0, Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle = '#fff';
-        ctx.font = '10px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('e', ex, ey);
-      }
-
-      remaining -= onThis;
-      shellIndex++;
-    }
-    ctx.restore();
-
-    requestAnimationFrame(draw);
-  }
+  ctx.restore();
   requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
 
-  /* ---------- أزرار التفاعل ---------- */
-  document.getElementById('addP').addEventListener('click', ()=>{
-    currentIndex = (currentIndex+1) % elements.length;
-    N = 0; // reset neutrons
-    updateStats();
-  });
-  document.getElementById('remP').addEventListener('click', ()=>{
-    currentIndex = (currentIndex-1 + elements.length) % elements.length;
-    N = 0;
-    updateStats();
-  });
-  document.getElementById('addN').addEventListener('click', ()=>{
-    N = Math.min(200, N+1);
-    updateStats();
-  });
-  document.getElementById('remN').addEventListener('click', ()=>{
-    N = Math.max(0, N-1);
-    updateStats();
-  });
-  document.getElementById('addE').addEventListener('click', ()=>{
-    E = Math.min(200, E+1);
-    updateStats();
-  });
-  document.getElementById('remE').addEventListener('click', ()=>{
-    E = Math.max(0, E-1);
-    updateStats();
-  });
-  document.getElementById('reset').addEventListener('click', ()=>{
-    currentIndex = 0; N = 0; E = 1;
-    updateStats();
-    stabilityEl.textContent = 'تمت إعادة الضبط.';
-  });
-  document.getElementById('check').addEventListener('click', ()=>{
-    stabilityEl.textContent = 'تقييم مبسط: نسبة N/P داخل حدود تقريبية.';
-  });
+/* ---------- أزرار ---------- */
+document.getElementById('addP').addEventListener('click',()=>{
+  currentIndex=(currentIndex+1)%elements.length;N=0;updateStats();
+});
+document.getElementById('remP').addEventListener('click',()=>{
+  currentIndex=(currentIndex-1+elements.length)%elements.length;N=0;updateStats();
+});
+document.getElementById('addN').addEventListener('click',()=>{
+  N=Math.min(200,N+1);updateStats();
+});
+document.getElementById('remN').addEventListener('click',()=>{
+  N=Math.max(0,N-1);updateStats();
+});
+document.getElementById('addE').addEventListener('click',()=>{
+  E=Math.min(200,E+1);updateStats();
+});
+document.getElementById('remE').addEventListener('click',()=>{
+  E=Math.max(0,E-1);updateStats();
+});
+document.getElementById('reset').addEventListener('click',()=>{
+  currentIndex=0;N=0;E=1;updateStats();
+  stabilityEl.textContent='تمت إعادة الضبط.';
+  stabilityEl.style.background='#fff7e6';stabilityEl.style.border='1px solid #ffecb5';
+});
 
-  /* init */
-  updateStats();
+/* ---------- نظام الاستقرار ---------- */
+function suggestCompound(symbol){
+  const suggestions={
+    H:"H₂O",O:"O₂ أو H₂O",N:"NH₃",C:"CO₂ أو CH₄",Na:"NaCl",Cl:"NaCl",
+    K:"KCl",Ca:"CaCO₃",S:"SO₂ أو H₂S",Mg:"MgO"
+  };
+  return suggestions[symbol]||"لا يوجد اقتراح محدد.";
+}
+
+document.getElementById('check').addEventListener('click',()=>{
+  const elem=elements[currentIndex];
+  const ratio=N/P;
+  let stable=false;
+  if(P<=20){if(ratio>=0.9 && ratio<=1.6) stable=true;} else {if(ratio>=1.2 && ratio<=1.6) stable=true;}
+  const compound=suggestCompound(elem.symbol);
+  if(stable){
+    stabilityEl.style.background="#e6ffef";stabilityEl.style.border="1px solid #b8ffda";
+    stabilityEl.textContent=`الذرة مستقرة✔️ — نسبة N/P = ${ratio.toFixed(2)}
+اقتراح مركب مناسب: ${compound}`;
+  } else {
+    stabilityEl.style.background="#ffecec";stabilityEl.style.border="1px solid #ffb8b8";
+    stabilityEl.textContent=`الذرة غير مستقرة ❌ — نسبة N/P = ${ratio.toFixed(2)}
+لتثبيت اقترح تكوين مركب مثل: ${compound}`;
+  }
+});
+
+updateStats();
 </script>
-</body>
-</html>
-S
